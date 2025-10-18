@@ -28,6 +28,7 @@ end
 ---@class ControlParams
 ---@field id string
 ---@field prop string
+---@field default number
 ---@field min number
 ---@field max number
 ---@field x number
@@ -39,20 +40,36 @@ local function control(params)
 	core.register_on_player_receive_fields(function (player, formname, fields)
 		if formname ~= "visuals2:main" then return end
 
+		if fields[params.id] ~= nil and string.sub(fields[params.id], 0, 3) == "VAL" then
+			return
+		end
+
 		local value = parse(fields[params.id])
 		if value == nil then return end
 
 		value = params.min + (value / 1000.0 * (params.max - params.min))
+		core.chat_send_player(player:get_player_name(), string.format("Set %s to %f", params.prop, value))
 		local lighting = {}
 		table_set(lighting, params.prop:split("."), value)
+
+		print("\n\n\n=============")
+		print("Call player:set_lighting with:")
+		print(dump(lighting))
 		player:set_lighting(lighting)
+		print("\nplayer:get_lighting() is now:")
+		print(dump(player:get_lighting()))
 	end)
+
+	local span = math.abs(params.min - params.max)
+	local interpolation = (params.default - params.min) / span
+	local initial_value = 1000.0 * interpolation
 
 	return string.format([[
 		label[%f,%f;%s]
-		scrollbar[%f,%f;3,0.5;horizontal;%s;0]
+		scrollbar[%f,%f;3,0.5;horizontal;%s;%d]
 	]], params.x, params.y, params.prop,
-		params.x, params.y + 0.2, params.id)
+		params.x, params.y + 0.2, params.id,
+		initial_value)
 end
 
 core.register_globalstep(function ()
@@ -65,31 +82,197 @@ core.register_globalstep(function ()
 					id = "artificial_light_r",
 					prop = "artificial_light.r",
 					min = 0,
-					max = 1,
+					max = 1.04,
 					x = 0,
 					y = 0.25,
+					default = 1.04,
 				},
 				control {
 					id = "artificial_light_g",
 					prop = "artificial_light.g",
 					min = 0,
-					max = 1,
+					max = 1.04,
 					x = 3,
 					y = 0.25,
+					default = 1.04,
 				},
 				control {
 					id = "artificial_light_b",
 					prop = "artificial_light.b",
 					min = 0,
-					max = 1,
+					max = 1.04,
 					x = 6,
 					y = 0.25,
+					default = 1.04,
+				},
+				control {
+					id = "vignette_dark",
+					prop = "vignette.dark",
+					min = -2,
+					max = 2,
+					x = 0,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "vignette_bright",
+					prop = "vignette.bright",
+					min = -2,
+					max = 2,
+					x = 3,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "vignette_power",
+					prop = "vignette.power",
+					min = -1,
+					max = 1,
+					x = 6,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "r0_x",
+					prop = "volumetric_light.scattering_coefficients.x",
+					min = -2,
+					max = 2,
+					x = 0,
+					y = 4.25,
+					default = 2,
+				},
+				control {
+					id = "r0_y",
+					prop = "volumetric_light.scattering_coefficients.y",
+					min = -2,
+					max = 2,
+					x = 5,
+					y = 4.25,
+					default = 1,
+				},
+				control {
+					id = "r0_z",
+					prop = "volumetric_light.scattering_coefficients.z",
+					min = -2,
+					max = 2,
+					x = 10,
+					y = 4.25,
+					default = 0.5,
+				},
+				control {
+					id = "r0_strength",
+					prop = "volumetric_light.strength",
+					min = -1,
+					max = 1,
+					x = 15,
+					y = 4.25,
+					default = 0.5,
+				},
+				control {
+					id = "foliage_translucency",
+					prop = "foliage_translucency",
+					min = 0,
+					max = 10,
+					x = 0,
+					y = 2.25,
+					default = 1.5,
+				},
+				control {
+					id = "specular_intensity",
+					prop = "specular_intensity",
+					min = 0,
+					max = 10,
+					x = 3,
+					y = 2.25,
+					default = 1.5,
+				},
+				-- cdl
+				control {
+					id = "cdl_o_x",
+					prop = "cdl.offset.x",
+					min = -1,
+					max = 1,
+					x = 10,
+					y = 0.25,
+					default = 0,
+				},
+				control {
+					id = "cdl_o_y",
+					prop = "cdl.offset.y",
+					min = -1,
+					max = 1,
+					x = 13,
+					y = 0.25,
+					default = 0,
+				},
+				control {
+					id = "cdl_o_z",
+					prop = "cdl.offset.z",
+					min = -1,
+					max = 1,
+					x = 16,
+					y = 0.25,
+					default = 0,
+				},
+				control {
+					id = "cdl_s_x",
+					prop = "cdl.slope.x",
+					min = -1,
+					max = 1,
+					x = 10,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "cdl_s_y",
+					prop = "cdl.slope.y",
+					min = -1,
+					max = 1,
+					x = 13,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "cdl_s_z",
+					prop = "cdl.slope.z",
+					min = -1,
+					max = 1,
+					x = 16,
+					y = 1.25,
+					default = 1,
+				},
+				control {
+					id = "cdl_p_x",
+					prop = "cdl.power.x",
+					min = -1,
+					max = 1,
+					x = 10,
+					y = 2.25,
+					default = 1,
+				},
+				control {
+					id = "cdl_p_y",
+					prop = "cdl.power.y",
+					min = -1,
+					max = 1,
+					x = 13,
+					y = 2.25,
+					default = 1,
+				},
+				control {
+					id = "cdl_p_z",
+					prop = "cdl.power.z",
+					min = -1,
+					max = 1,
+					x = 16,
+					y = 2.25,
+					default = 1,
 				},
 			}
 
 			local formspec = string.format([[
 				formspec_version[10]
-				size[20,5]
+				size[20,11]
 				position[0.5,1.0]
 				no_prepend[]
 				bgcolor[#00000020;false]
