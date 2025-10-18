@@ -77,6 +77,8 @@ core.register_globalstep(function ()
 	if player ~= nil then
 		local controls = player:get_player_control()
 		if controls.aux1 then
+			local lighting = player:get_lighting()
+			print("applying defaults to formspec:", dump(lighting))
 			local form_controls = {
 				control {
 					id = "artificial_light_r",
@@ -85,7 +87,7 @@ core.register_globalstep(function ()
 					max = 1.04,
 					x = 0,
 					y = 0.25,
-					default = 1.04,
+					default = lighting.artificial_light.r,
 				},
 				control {
 					id = "artificial_light_g",
@@ -94,7 +96,7 @@ core.register_globalstep(function ()
 					max = 1.04,
 					x = 3,
 					y = 0.25,
-					default = 1.04,
+					default = lighting.artificial_light.g,
 				},
 				control {
 					id = "artificial_light_b",
@@ -103,7 +105,7 @@ core.register_globalstep(function ()
 					max = 1.04,
 					x = 6,
 					y = 0.25,
-					default = 1.04,
+					default = lighting.artificial_light.b,
 				},
 				control {
 					id = "vignette_dark",
@@ -112,7 +114,7 @@ core.register_globalstep(function ()
 					max = 2,
 					x = 0,
 					y = 1.25,
-					default = 1,
+					default = lighting.vignette.dark,
 				},
 				control {
 					id = "vignette_bright",
@@ -121,7 +123,7 @@ core.register_globalstep(function ()
 					max = 2,
 					x = 3,
 					y = 1.25,
-					default = 1,
+					default = lighting.vignette.bright,
 				},
 				control {
 					id = "vignette_power",
@@ -130,7 +132,7 @@ core.register_globalstep(function ()
 					max = 1,
 					x = 6,
 					y = 1.25,
-					default = 1,
+					default = lighting.vignette.power,
 				},
 				control {
 					id = "r0_x",
@@ -139,7 +141,7 @@ core.register_globalstep(function ()
 					max = 2,
 					x = 0,
 					y = 4.25,
-					default = 2,
+					default = lighting.volumetric_light.scattering_coefficients.x,
 				},
 				control {
 					id = "r0_y",
@@ -148,7 +150,7 @@ core.register_globalstep(function ()
 					max = 2,
 					x = 5,
 					y = 4.25,
-					default = 1,
+					default = lighting.volumetric_light.scattering_coefficients.y,
 				},
 				control {
 					id = "r0_z",
@@ -157,16 +159,16 @@ core.register_globalstep(function ()
 					max = 2,
 					x = 10,
 					y = 4.25,
-					default = 0.5,
+					default = lighting.volumetric_light.scattering_coefficients.z,
 				},
 				control {
 					id = "r0_strength",
 					prop = "volumetric_light.strength",
-					min = -1,
+					min = 0,
 					max = 1,
 					x = 15,
 					y = 4.25,
-					default = 0.5,
+					default = lighting.volumetric_light.strength,
 				},
 				control {
 					id = "foliage_translucency",
@@ -175,7 +177,7 @@ core.register_globalstep(function ()
 					max = 10,
 					x = 0,
 					y = 2.25,
-					default = 1.5,
+					default = lighting.foliage_translucency,
 				},
 				control {
 					id = "specular_intensity",
@@ -184,7 +186,7 @@ core.register_globalstep(function ()
 					max = 10,
 					x = 3,
 					y = 2.25,
-					default = 1.5,
+					default = lighting.specular_intensity,
 				},
 				-- cdl
 				control {
@@ -194,7 +196,7 @@ core.register_globalstep(function ()
 					max = 1,
 					x = 10,
 					y = 0.25,
-					default = 0,
+					default = lighting.cdl.offset.x,
 				},
 				control {
 					id = "cdl_o_y",
@@ -203,7 +205,7 @@ core.register_globalstep(function ()
 					max = 1,
 					x = 13,
 					y = 0.25,
-					default = 0,
+					default = lighting.cdl.offset.y,
 				},
 				control {
 					id = "cdl_o_z",
@@ -212,61 +214,61 @@ core.register_globalstep(function ()
 					max = 1,
 					x = 16,
 					y = 0.25,
-					default = 0,
+					default = lighting.cdl.offset.z,
 				},
 				control {
 					id = "cdl_s_x",
 					prop = "cdl.slope.x",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 10,
 					y = 1.25,
-					default = 1,
+					default = lighting.cdl.slope.x,
 				},
 				control {
 					id = "cdl_s_y",
 					prop = "cdl.slope.y",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 13,
 					y = 1.25,
-					default = 1,
+					default = lighting.cdl.slope.y,
 				},
 				control {
 					id = "cdl_s_z",
 					prop = "cdl.slope.z",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 16,
 					y = 1.25,
-					default = 1,
+					default = lighting.cdl.slope.z,
 				},
 				control {
 					id = "cdl_p_x",
 					prop = "cdl.power.x",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 10,
 					y = 2.25,
-					default = 1,
+					default = lighting.cdl.power.x,
 				},
 				control {
 					id = "cdl_p_y",
 					prop = "cdl.power.y",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 13,
 					y = 2.25,
-					default = 1,
+					default = lighting.cdl.power.y,
 				},
 				control {
 					id = "cdl_p_z",
 					prop = "cdl.power.z",
-					min = -1,
-					max = 1,
+					min = -2,
+					max = 2,
 					x = 16,
 					y = 2.25,
-					default = 1,
+					default = lighting.cdl.power.z,
 				},
 			}
 
