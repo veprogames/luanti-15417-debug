@@ -49,7 +49,7 @@ local function control(params)
 
 		value = params.min + (value / 1000.0 * (params.max - params.min))
 		core.chat_send_player(player:get_player_name(), string.format("Set %s to %f", params.prop, value))
-		local lighting = {}
+		local lighting = player:get_lighting()
 		table_set(lighting, params.prop:split("."), value)
 
 		print("\n\n\n=============")
