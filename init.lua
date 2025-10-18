@@ -52,7 +52,7 @@ local function control(params)
 		label[%f,%f;%s]
 		scrollbar[%f,%f;3,0.5;horizontal;%s;0]
 	]], params.x, params.y, params.prop,
-		params.x, params.y + 0.3, params.id)
+		params.x, params.y + 0.2, params.id)
 end
 
 core.register_globalstep(function ()
@@ -66,30 +66,34 @@ core.register_globalstep(function ()
 					prop = "artificial_light.r",
 					min = 0,
 					max = 1,
-					x = 1,
-					y = 1,
+					x = 0,
+					y = 0.25,
 				},
 				control {
 					id = "artificial_light_g",
 					prop = "artificial_light.g",
 					min = 0,
 					max = 1,
-					x = 4,
-					y = 1,
+					x = 3,
+					y = 0.25,
 				},
 				control {
 					id = "artificial_light_b",
 					prop = "artificial_light.b",
 					min = 0,
 					max = 1,
-					x = 7,
-					y = 1,
+					x = 6,
+					y = 0.25,
 				},
 			}
 
 			local formspec = string.format([[
 				formspec_version[10]
 				size[20,5]
+				position[0.5,1.0]
+				no_prepend[]
+				bgcolor[#00000020;false]
+				anchor[0.5,1]
 				%s
 			]], table.concat(form_controls, "\n"))
 
